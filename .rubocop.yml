@@ -1,0 +1,10 @@
+AllCops:
+  Exclude:
+    - 'lib/texttest_fixture.rb'
+
+Metrics/LineLength:
+  Max: 100
+  IgnoredPatterns: ['\A#']
+
+
+

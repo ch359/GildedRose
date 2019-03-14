@@ -1,5 +1,7 @@
 class GildedRose
 
+  attr_reader :items
+
   def initialize(items)
     # rubocop:disable
     @items = items
@@ -53,6 +55,12 @@ class GildedRose
       end
     end
   end
+
+  def run(num)
+    num.times { update_quality }
+  end
+
+
 end
 
 # rubocop:disable
