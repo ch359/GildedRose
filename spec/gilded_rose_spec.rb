@@ -72,13 +72,36 @@ describe GildedRose do
         rose.update_quality
         expect(items[0].quality).to eq(7)
       end
-
-
     end
 
+    context 'for Backstage passes' do
+      it "increases its quality with age" do
+        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 15, 10)]
+        rose = GildedRose.new(items)
+        rose.update_quality
+        expect(items[0].quality).to eq(11)
+      end
+
+      it "increase quality by 2 when sell_in date is 6 - 10 inclusive" do
+        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 10, 10)]
+        rose = GildedRose.new(items)
+        rose.update_quality
+        expect(items[0].quality).to eq(12)
+      end
+
+      it "increases quality by 3 when sell_in date is 5 or fewer" do
+        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 5, 10)]
+        rose = GildedRose.new(items)
+        rose.update_quality
+        expect(items[0].quality).to eq(13)
+      end
+
+      it "drops to 0 quality after the concert" do
+        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 10)]
+        rose = GildedRose.new(items)
+        rose.update_quality
+        expect(items[0].quality).to eq(0)
+      end
+    end
   end
-
-
-
-
 end
