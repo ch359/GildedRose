@@ -41,6 +41,44 @@ describe GildedRose do
         expect(item.quality).to be_between(0, 50)
       end
     end
+
+    context 'for regular items' do
+      it 'decreases quality by 1 on mundane items' do
+        items = [Item.new('foo', 5, 10)]
+        rose = GildedRose.new(items)
+        rose.update_quality
+        expect(items[0].quality).to eq(9)
+      end
+
+      it 'decreases quality by 2 if past its sell_in date' do
+        items = [Item.new('foo', 0, 5)]
+        rose = GildedRose.new(items)
+        rose.update_quality
+        expect(items[0].quality).to eq(3)
+      end
+    end
+
+    context 'for aged brie' do
+      it 'increases in quality before the sell_in date' do
+        items = [Item.new('Aged Brie', 5, 10)]
+        rose = GildedRose.new(items)
+        rose.update_quality
+        expect(items[0].quality).to eq(11)
+      end
+
+      it "increases its quality faster after the sell_in date" do
+        items = [Item.new('Aged Brie', 0, 5)]
+        rose = GildedRose.new(items)
+        rose.update_quality
+        expect(items[0].quality).to eq(7)
+      end
+
+
+    end
+
   end
+
+
+
 
 end
