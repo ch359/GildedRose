@@ -1,7 +1,9 @@
 class GildedRose
 
   def initialize(items)
+    # rubocop:disable
     @items = items
+    # rubocop:enable
   end
 
   def update_quality()
@@ -53,6 +55,8 @@ class GildedRose
   end
 end
 
+# rubocop:disable
+
 class Item
   attr_accessor :name, :sell_in, :quality
 
@@ -66,3 +70,5 @@ class Item
     "#{@name}, #{@sell_in}, #{@quality}"
   end
 end
+
+# rubocop:enable
