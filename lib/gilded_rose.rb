@@ -59,15 +59,8 @@ class GildedRose
 
       item.sell_in = item.sell_in - 1
       if item.sell_in < 0
-        if item.name != "Aged Brie"
-
-          if item.quality > 0
-            item.quality = item.quality - 1
-          end
-        else
-          if item.quality < 50
-            item.quality = item.quality + 1
-          end
+        if item.quality > 0
+          item.quality = item.quality - 1
         end
       end
     end
