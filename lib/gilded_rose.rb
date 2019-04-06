@@ -6,6 +6,14 @@ class GildedRose
     # rubocop:disable
     @items = items
     # rubocop:enable
+    @attributes = {
+      legendary: ['Sulfuras, Hand of Ragnaros']
+    }
+
+  end
+
+  def legendary?(item)
+    @attributes[:legendary].include?(item.name)
   end
 
   def update_quality()
