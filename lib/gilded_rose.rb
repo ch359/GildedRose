@@ -6,15 +6,39 @@ class GildedRose
     # rubocop:disable
     @items = items
     # rubocop:enable
-    @attributes = {
-      legendary: ['Sulfuras, Hand of Ragnaros']
+    @special_items = {
+      legendary: ['Sulfuras, Hand of Ragnaros'],
+      aging_cheese: ['Aged Brie'],
+      backstage_pass: ['Backstage passes to a TAFKAL80ETC concert']
     }
 
   end
 
-  def legendary?(item)
-    @attributes[:legendary].include?(item.name)
+  def update_quality
+    @items.each do |item|
+
+      next if legendary?(item)
+
+      if aging_cheese?(item)
+        update_brie(item)
+        next
+      end
+
+      if backstage_pass?(item)
+        update_backstage_pass(item)
+        next
+      end
+
+      update_mundane_item(item)
+
+    end
   end
+
+  def run(num)
+    num.times { update_quality }
+  end
+
+  private
 
   def update_brie(item)
     if item.quality < 50
@@ -39,31 +63,31 @@ class GildedRose
     item.sell_in -= 1
   end
 
-  def update_quality
-    @items.each do |item|
-      next if legendary?(item)
-
-      if item.name == 'Aged Brie'
-        update_brie(item)
-        next
-      end
-
-      if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-        update_backstage_pass(item)
-        next
-      end
-
-      item.quality -= 1 if item.quality.positive?
-      item.sell_in -= 1
-      item.quality -= 1 if item.sell_in.negative? && item.quality.positive?
-
-    end
+  def update_mundane_item(item)
+    update_mundane_quality(item)
+    update_mundane_sell_in(item)
   end
 
-  def run(num)
-    num.times { update_quality }
+  def update_mundane_quality(item)
+    item.quality -= 1 if item.quality.positive?
+    item.quality -= 1 if item.sell_in <= 0 && item.quality.positive?
   end
 
+  def update_mundane_sell_in(item)
+    item.sell_in -= 1
+  end
+
+  def legendary?(item)
+    @special_items[:legendary].include?(item.name)
+  end
+
+  def aging_cheese?(item)
+    @special_items[:aging_cheese].include?(item.name)
+  end
+
+  def backstage_pass?(item)
+    @special_items[:backstage_pass].include?(item.name)
+  end
 
 end
 

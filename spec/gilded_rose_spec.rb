@@ -110,7 +110,7 @@ describe GildedRose do
         expect(items[0].quality).to eq(12)
       end
 
-      it 'increases quality by 3 when sell_in date is 5 or fewer' do
+      it 'increases quality by 3 when sell_in date is 5 or less' do
         items = [Item.new('Backstage passes to a TAFKAL80ETC concert', 5, 10)]
         rose = GildedRose.new(items)
         rose.update_quality
@@ -167,20 +167,6 @@ describe GildedRose do
     it 'formats the output' do
       rose = GildedRose.new(items)
       expect(rose.items[0].to_s).to eq('+5 Dexterity Vest, 10, 20')
-    end
-  end
-
-  describe '#legendary?' do
-    it 'recognises the Hand of Ragnaros as legendary'  do
-    items = [Item.new('Sulfuras, Hand of Ragnaros', 0, 80)]
-    rose = GildedRose.new(items)
-    expect(rose.legendary?(rose.items[0])).to be true
-    end
-
-    it 'rejects mundane items' do
-      items = [Item.new('Aged Brie', 0, 80)]
-      rose = GildedRose.new(items)
-      expect(rose.legendary?(rose.items[0])).to be false
     end
   end
 
