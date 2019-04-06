@@ -8,8 +8,6 @@ describe GildedRose do
       Item.new('+5 Dexterity Vest', 10, 20),
       Item.new('Aged Brie', 2, 0),
       Item.new('Elixir of the Mongoose', 5, 7),
-      Item.new('Sulfuras, Hand of Ragnaros', 0, 50),
-      Item.new('Sulfuras, Hand of Ragnaros', -1, 50),
       Item.new('Backstage passes to a TAFKAL80ETC concert', 15, 20),
       Item.new('Backstage passes to a TAFKAL80ETC concert', 10, 49),
       Item.new('Backstage passes to a TAFKAL80ETC concert', 5, 49),
@@ -18,6 +16,15 @@ describe GildedRose do
     ]
   end
 
+  let(:luxury_items) do
+    [
+      Item.new('Sulfuras, Hand of Ragnaros', 0, 80),
+      Item.new('Sulfuras, Hand of Ragnaros', -1, 80)
+    ]
+  end
+
+  let(:all_items) { items + luxury_items }
+
   describe '#update_quality' do
     it 'does not change the name' do
       items = [Item.new('foo', 0, 0)]
@@ -25,23 +32,23 @@ describe GildedRose do
       expect(items[0].name).to eq 'foo'
     end
 
-    it 'only sets quality within the range 0 - 50 inclusive' do
-      rose = GildedRose.new(items)
-      rose.run(1)
-      rose.items.each do |item|
-        expect(item.quality).to be_between(0, 50)
-      end
-      rose.run(5)
-      rose.items.each do |item|
-        expect(item.quality).to be_between(0, 50)
-      end
-      rose.run(50)
-      rose.items.each do |item|
-        expect(item.quality).to be_between(0, 50)
-      end
-    end
-
     context 'for regular items' do
+      it 'only sets quality within the range 0 - 50 inclusive' do
+        rose = GildedRose.new(items)
+        rose.run(1)
+        rose.items.each do |item|
+          expect(item.quality).to be_between(0, 50)
+        end
+        rose.run(5)
+        rose.items.each do |item|
+          expect(item.quality).to be_between(0, 50)
+        end
+        rose.run(50)
+        rose.items.each do |item|
+          expect(item.quality).to be_between(0, 50)
+        end
+      end
+
       it 'decreases quality by 1 on mundane items' do
         items = [Item.new('foo', 5, 10)]
         rose = GildedRose.new(items)
@@ -54,6 +61,14 @@ describe GildedRose do
         rose = GildedRose.new(items)
         rose.update_quality
         expect(items[0].quality).to eq(3)
+      end
+
+      it 'reduces sell_in days' do
+        rose = GildedRose.new(items)
+        expect { rose.update_quality }.to change { all_items[0].sell_in }.by(-1)
+        expect { rose.update_quality }.to change { all_items[1].sell_in }.by(-1)
+        expect { rose.update_quality }.to change { all_items[3].sell_in }.by(-1)
+        expect { rose.update_quality }.to change { all_items[6].sell_in }.by(-1)
       end
     end
 
@@ -100,6 +115,21 @@ describe GildedRose do
         rose = GildedRose.new(items)
         rose.update_quality
         expect(items[0].quality).to eq(0)
+      end
+    end
+
+    context 'for Luxury items' do
+      it 'does not reduce quality with age' do
+        rose = GildedRose.new(luxury_items)
+        rose.update_quality
+        expect(luxury_items[0].quality).to eq(80)
+        expect(luxury_items[1].quality).to eq(80)
+      end
+
+      it 'does not reduce sell_in days' do
+        rose = GildedRose.new(luxury_items)
+        expect { rose.update_quality }.not_to(change { luxury_items[0].sell_in })
+        expect { rose.update_quality }.not_to(change { luxury_items[1].sell_in })
       end
     end
   end

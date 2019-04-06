@@ -7,7 +7,7 @@ Metrics/LineLength:
   IgnoredPatterns: ['\A#']
 
 Metrics/BlockLength:
-  ExcludedMethods: ['describe']
+  ExcludedMethods: ['describe', 'context']
 
 
 
