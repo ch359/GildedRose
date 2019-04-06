@@ -123,6 +123,13 @@ describe GildedRose do
         rose.update_quality
         expect(items[0].quality).to eq(0)
       end
+
+      it 'stays at 0 quality when sell_in is less than 0' do
+        items = [Item.new('Backstage passes to a TAFKAL80ETC concert', -1, 10)]
+        rose = GildedRose.new(items)
+        rose.update_quality
+        expect(items[0].quality).to eq(0)
+      end
     end
 
     context 'for Luxury items' do
