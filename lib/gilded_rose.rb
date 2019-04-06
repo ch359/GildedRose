@@ -5,12 +5,10 @@ class GildedRose
   attr_reader :items
 
   def initialize(items)
-    # rubocop:disable
     @items = items
-    # rubocop:enable
     @special_items = {
       legendary: ['Sulfuras, Hand of Ragnaros'],
-      aging_cheese: ['Aged Brie'],
+      mature: ['Aged Brie'],
       backstage_pass: ['Backstage passes to a TAFKAL80ETC concert']
     }
   end
@@ -31,12 +29,12 @@ class GildedRose
   private
 
   def update_item_quality(item)
-    if aging_cheese?(item)
-      update_brie(item)
+    if mature?(item)
+      update_mature(item)
     elsif backstage_pass?(item)
       update_backstage_pass(item)
     else
-      update_mundane_item(item)
+      update_mundane(item)
     end
 
     limit_quality(item)
@@ -46,27 +44,19 @@ class GildedRose
     item.quality = 50 if item.quality > 50
   end
 
-  def update_brie(item)
+  def update_mature(item)
     item.quality += 1 if item.sell_in.positive?
     item.quality += 2 if item.sell_in <= 0
   end
 
   def update_backstage_pass(item)
-    item.quality += if item.sell_in <= 5
-                      3
-                    elsif item.sell_in <= 10
-                      2
-                    else
-                      1
-                    end
+    item.quality += 1
+    item.quality += 1 if item.sell_in <= 10
+    item.quality += 1 if item.sell_in <= 5
     item.quality = 0 if item.sell_in <= 0
   end
 
-  def update_mundane_item(item)
-    update_mundane_quality(item)
-  end
-
-  def update_mundane_quality(item)
+  def update_mundane(item)
     item.quality -= 1 if item.quality.positive?
     item.quality -= 1 if item.sell_in <= 0 && item.quality.positive?
   end
@@ -79,8 +69,8 @@ class GildedRose
     @special_items[:legendary].include?(item.name)
   end
 
-  def aging_cheese?(item)
-    @special_items[:aging_cheese].include?(item.name)
+  def mature?(item)
+    @special_items[:mature].include?(item.name)
   end
 
   def backstage_pass?(item)
