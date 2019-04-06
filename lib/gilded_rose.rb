@@ -53,16 +53,10 @@ class GildedRose
         next
       end
 
-      if item.quality > 0
-        item.quality = item.quality - 1
-      end
+      item.quality -= 1 if item.quality.positive?
+      item.sell_in -= 1
+      item.quality -= 1 if item.sell_in.negative? && item.quality.positive?
 
-      item.sell_in = item.sell_in - 1
-      if item.sell_in < 0
-        if item.quality > 0
-          item.quality = item.quality - 1
-        end
-      end
     end
   end
 
