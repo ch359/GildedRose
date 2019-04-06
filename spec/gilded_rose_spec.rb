@@ -93,8 +93,6 @@ describe GildedRose do
         rose.update_quality
         expect(items[0].sell_in).to eq(-1)
       end
-
-
     end
 
     context 'for Backstage passes' do
