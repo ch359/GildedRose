@@ -81,11 +81,20 @@ describe GildedRose do
       end
 
       it 'increases its quality faster after the sell_in date' do
-        items = [Item.new('Aged Brie', 0, 5)]
+        items = [Item.new('Aged Brie', -1, 5)]
         rose = GildedRose.new(items)
         rose.update_quality
         expect(items[0].quality).to eq(7)
       end
+
+      it 'reduces its sell-in date when below zero' do
+        items = [Item.new('Aged Brie', 0, 5)]
+        rose = GildedRose.new(items)
+        rose.update_quality
+        expect(items[0].sell_in).to eq(-1)
+      end
+
+
     end
 
     context 'for Backstage passes' do
