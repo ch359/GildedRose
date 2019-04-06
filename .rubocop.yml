@@ -1,6 +1,6 @@
 AllCops:
   Exclude:
-    - 'approval_tests/texttest_fixture.rb'
+    - 'lib/texttest_fixture.rb'
 
 Metrics/LineLength:
   Max: 100
