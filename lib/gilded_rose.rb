@@ -11,7 +11,8 @@ class GildedRose
     @special_items = {
       legendary: ['Sulfuras, Hand of Ragnaros'],
       mature: ['Aged Brie'],
-      backstage_pass: ['Backstage passes to a TAFKAL80ETC concert']
+      backstage_pass: ['Backstage passes to a TAFKAL80ETC concert'],
+      conjured: ['Conjured Mana Cake']
     }
   end
 
@@ -35,6 +36,8 @@ class GildedRose
       update_mature(item)
     elsif backstage_pass?(item)
       update_backstage_pass(item)
+    elsif conjured?(item)
+      update_conjured(item)
     else
       update_mundane(item)
     end
@@ -63,8 +66,13 @@ class GildedRose
     item.quality -= STANDARD_QUALITY_CHANGE if item.sell_in <= 0 && item.quality.positive?
   end
 
+  def update_conjured(item)
+    item.quality -= (STANDARD_QUALITY_CHANGE * 2) if item.quality.positive?
+    item.quality -= (STANDARD_QUALITY_CHANGE * 2) if item.sell_in <= 0 && item.quality.positive?
+  end
+
   def update_sell_in(item)
-    item.sell_in -= STANDARD_QUALITY_CHANGE
+    item.sell_in -= 1
   end
 
   def legendary?(item)
@@ -77,6 +85,10 @@ class GildedRose
 
   def backstage_pass?(item)
     @special_items[:backstage_pass].include?(item.name)
+  end
+
+  def conjured?(item)
+    @special_items[:conjured].include?(item.name)
   end
 end
 

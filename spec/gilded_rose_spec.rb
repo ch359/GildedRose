@@ -132,6 +132,20 @@ describe GildedRose do
       end
     end
 
+    context 'for Conjured items' do
+      it 'reduces quality at double the normal rate before sell_in date' do
+        items = [Item.new('Conjured Mana Cake', 3, 6)]
+        rose = GildedRose.new(items)
+        expect { rose.update_quality }.to change { items[0].quality }.by(-2)
+      end
+
+      it 'reduces quality at double the normal rate after sell_in date' do
+        items = [Item.new('Conjured Mana Cake', -1, 6)]
+        rose = GildedRose.new(items)
+        expect { rose.update_quality }.to change { items[0].quality }.by(-4)
+      end
+    end
+
     context 'for Luxury items' do
       it 'does not reduce quality with age' do
         rose = GildedRose.new(luxury_items)
