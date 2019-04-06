@@ -3,19 +3,18 @@
 require 'gilded_rose'
 
 describe GildedRose do
-
   let(:items) do
     [
-      Item.new(name = '+5 Dexterity Vest', sell_in = 10, quality = 20),
-      Item.new(name = 'Aged Brie', sell_in = 2, quality = 0),
-      Item.new(name = 'Elixir of the Mongoose', sell_in = 5, quality = 7),
-      Item.new(name = 'Sulfuras, Hand of Ragnaros', sell_in = 0, quality = 50),
-      Item.new(name = 'Sulfuras, Hand of Ragnaros', sell_in = -1, quality = 50),
-      Item.new(name = 'Backstage passes to a TAFKAL80ETC concert', sell_in = 15, quality = 20),
-      Item.new(name = 'Backstage passes to a TAFKAL80ETC concert', sell_in = 10, quality = 49),
-      Item.new(name = 'Backstage passes to a TAFKAL80ETC concert', sell_in = 5, quality = 49),
+      Item.new('+5 Dexterity Vest', 10, 20),
+      Item.new('Aged Brie', 2, 0),
+      Item.new('Elixir of the Mongoose', 5, 7),
+      Item.new('Sulfuras, Hand of Ragnaros', 0, 50),
+      Item.new('Sulfuras, Hand of Ragnaros', -1, 50),
+      Item.new('Backstage passes to a TAFKAL80ETC concert', 15, 20),
+      Item.new('Backstage passes to a TAFKAL80ETC concert', 10, 49),
+      Item.new('Backstage passes to a TAFKAL80ETC concert', 5, 49),
       # This Conjured item does not work properly yet
-      Item.new(name = 'Conjured Mana Cake', sell_in = 3, quality = 6) # <-- :O
+      Item.new('Conjured Mana Cake', 3, 6) # <-- :O
     ]
   end
 
@@ -66,7 +65,7 @@ describe GildedRose do
         expect(items[0].quality).to eq(11)
       end
 
-      it "increases its quality faster after the sell_in date" do
+      it 'increases its quality faster after the sell_in date' do
         items = [Item.new('Aged Brie', 0, 5)]
         rose = GildedRose.new(items)
         rose.update_quality
@@ -75,33 +74,55 @@ describe GildedRose do
     end
 
     context 'for Backstage passes' do
-      it "increases its quality with age" do
-        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 15, 10)]
+      it 'increases its quality with age' do
+        items = [Item.new('Backstage passes to a TAFKAL80ETC concert', 15, 10)]
         rose = GildedRose.new(items)
         rose.update_quality
         expect(items[0].quality).to eq(11)
       end
 
-      it "increase quality by 2 when sell_in date is 6 - 10 inclusive" do
-        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 10, 10)]
+      it 'increase quality by 2 when sell_in date is 6 - 10 inclusive' do
+        items = [Item.new('Backstage passes to a TAFKAL80ETC concert', 10, 10)]
         rose = GildedRose.new(items)
         rose.update_quality
         expect(items[0].quality).to eq(12)
       end
 
-      it "increases quality by 3 when sell_in date is 5 or fewer" do
-        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 5, 10)]
+      it 'increases quality by 3 when sell_in date is 5 or fewer' do
+        items = [Item.new('Backstage passes to a TAFKAL80ETC concert', 5, 10)]
         rose = GildedRose.new(items)
         rose.update_quality
         expect(items[0].quality).to eq(13)
       end
 
-      it "drops to 0 quality after the concert" do
-        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 10)]
+      it 'drops to 0 quality after the concert' do
+        items = [Item.new('Backstage passes to a TAFKAL80ETC concert', 0, 10)]
         rose = GildedRose.new(items)
         rose.update_quality
         expect(items[0].quality).to eq(0)
       end
+    end
+  end
+
+  describe '#to_s' do
+    it 'outputs name' do
+      rose = GildedRose.new(items)
+      expect(rose.items[0].to_s).to include(items[0].name)
+    end
+
+    it 'outputs sell_in days' do
+      rose = GildedRose.new(items)
+      expect(rose.items[0].to_s).to include(items[0].sell_in.to_s)
+    end
+
+    it 'outputs quality' do
+      rose = GildedRose.new(items)
+      expect(rose.items[0].to_s).to include(items[0].quality.to_s)
+    end
+
+    it 'formats the output' do
+      rose = GildedRose.new(items)
+      expect(rose.items[0].to_s).to eq('+5 Dexterity Vest, 10, 20')
     end
   end
 end

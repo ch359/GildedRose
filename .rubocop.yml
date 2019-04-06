@@ -1,10 +1,14 @@
 AllCops:
   Exclude:
-    - 'lib/texttest_fixture.rb'
+    - 'approval_tests/texttest_fixture.rb'
 
 Metrics/LineLength:
   Max: 100
   IgnoredPatterns: ['\A#']
+
+Metrics/BlockLength:
+  ExcludedMethods: ['describe']
+
 
 
 
