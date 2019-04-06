@@ -169,5 +169,4 @@ describe GildedRose do
       expect(rose.items[0].to_s).to eq('+5 Dexterity Vest, 10, 20')
     end
   end
-
 end

@@ -1,5 +1,7 @@
-class GildedRose
+# frozen_string_literal: true
 
+# Manages the stock of the GildedRose tavern
+class GildedRose
   attr_reader :items
 
   def initialize(items)
@@ -11,26 +13,14 @@ class GildedRose
       aging_cheese: ['Aged Brie'],
       backstage_pass: ['Backstage passes to a TAFKAL80ETC concert']
     }
-
   end
 
   def update_quality
     @items.each do |item|
-
       next if legendary?(item)
 
-      if aging_cheese?(item)
-        update_brie(item)
-        next
-      end
-
-      if backstage_pass?(item)
-        update_backstage_pass(item)
-        next
-      end
-
-      update_mundane_item(item)
-
+      update_item_quality(item)
+      update_sell_in(item)
     end
   end
 
@@ -40,12 +30,25 @@ class GildedRose
 
   private
 
-  def update_brie(item)
-    if item.quality < 50
-      item.quality += 1 if item.sell_in.positive?
-      item.quality += 2 if item.sell_in <= 0
+  def update_item_quality(item)
+    if aging_cheese?(item)
+      update_brie(item)
+    elsif backstage_pass?(item)
+      update_backstage_pass(item)
+    else
+      update_mundane_item(item)
     end
-    item.sell_in -= 1
+
+    limit_quality(item)
+  end
+
+  def limit_quality(item)
+    item.quality = 50 if item.quality > 50
+  end
+
+  def update_brie(item)
+    item.quality += 1 if item.sell_in.positive?
+    item.quality += 2 if item.sell_in <= 0
   end
 
   def update_backstage_pass(item)
@@ -56,16 +59,11 @@ class GildedRose
                     else
                       1
                     end
-
-    item.quality = 50 if item.quality > 50
-
     item.quality = 0 if item.sell_in <= 0
-    item.sell_in -= 1
   end
 
   def update_mundane_item(item)
     update_mundane_quality(item)
-    update_mundane_sell_in(item)
   end
 
   def update_mundane_quality(item)
@@ -73,7 +71,7 @@ class GildedRose
     item.quality -= 1 if item.sell_in <= 0 && item.quality.positive?
   end
 
-  def update_mundane_sell_in(item)
+  def update_sell_in(item)
     item.sell_in -= 1
   end
 
@@ -88,11 +86,10 @@ class GildedRose
   def backstage_pass?(item)
     @special_items[:backstage_pass].include?(item.name)
   end
-
 end
 
-# rubocop:disable
-
+# rubocop:disable Style/DefWithParentheses
+# Manages Item attributes and printing of stock
 class Item
   attr_accessor :name, :sell_in, :quality
 
@@ -106,5 +103,4 @@ class Item
     "#{@name}, #{@sell_in}, #{@quality}"
   end
 end
-
-# rubocop:enable
+# rubocop:enable Style/DefWithParentheses
