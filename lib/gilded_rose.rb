@@ -24,12 +24,32 @@ class GildedRose
     item.sell_in -= 1
   end
 
+  def update_backstage_pass(item)
+    item.quality += if item.sell_in <= 5
+                      3
+                    elsif item.sell_in <= 10
+                      2
+                    else
+                      1
+                    end
+
+    item.quality = 50 if item.quality > 50
+
+    item.quality = 0 if item.sell_in <= 0
+    item.sell_in -= 1
+  end
+
   def update_quality
     @items.each do |item|
       next if legendary?(item)
 
       if item.name == 'Aged Brie'
         update_brie(item)
+        next
+      end
+
+      if item.name == 'Backstage passes to a TAFKAL80ETC concert'
+        update_backstage_pass(item)
         next
       end
 
