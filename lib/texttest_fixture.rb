@@ -32,5 +32,5 @@ gilded_rose = GildedRose.new items
   gilded_rose.update_quality
 end
 
-# generate output for 30 days:  ruby approval_tests/texttest_fixture.rb > approval_tests/test_output.gr
+# generate output for 30 days:  ruby lib/texttest_fixture.rb > approval_tests/test_output.gr
 # check for test failure:  diff approval_tests/master_output.gr approval_tests/test_output.gr
