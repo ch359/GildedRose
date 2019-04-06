@@ -4,6 +4,8 @@
 class GildedRose
   attr_reader :items
 
+  STANDARD_QUALITY_CHANGE = 1
+
   def initialize(items)
     @items = items
     @special_items = {
@@ -45,24 +47,24 @@ class GildedRose
   end
 
   def update_mature(item)
-    item.quality += 1 if item.sell_in.positive?
-    item.quality += 2 if item.sell_in <= 0
+    item.quality += STANDARD_QUALITY_CHANGE if item.sell_in.positive?
+    item.quality += (STANDARD_QUALITY_CHANGE * 2) if item.sell_in <= 0
   end
 
   def update_backstage_pass(item)
-    item.quality += 1
-    item.quality += 1 if item.sell_in <= 10
-    item.quality += 1 if item.sell_in <= 5
+    item.quality += STANDARD_QUALITY_CHANGE
+    item.quality += STANDARD_QUALITY_CHANGE if item.sell_in <= 10
+    item.quality += STANDARD_QUALITY_CHANGE if item.sell_in <= 5
     item.quality = 0 if item.sell_in <= 0
   end
 
   def update_mundane(item)
-    item.quality -= 1 if item.quality.positive?
-    item.quality -= 1 if item.sell_in <= 0 && item.quality.positive?
+    item.quality -= STANDARD_QUALITY_CHANGE if item.quality.positive?
+    item.quality -= STANDARD_QUALITY_CHANGE if item.sell_in <= 0 && item.quality.positive?
   end
 
   def update_sell_in(item)
-    item.sell_in -= 1
+    item.sell_in -= STANDARD_QUALITY_CHANGE
   end
 
   def legendary?(item)
